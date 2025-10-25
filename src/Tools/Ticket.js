@@ -1,7 +1,7 @@
 const { tool } = require("@langchain/core/tools");
 const { z } = require("zod");
 const ticketModel = require("../model/Ticket");
-
+const moment = require("moment");
 //Define schema
 const ticketSchema = z.object({
   title: z
@@ -16,13 +16,32 @@ const ticketSchema = z.object({
 
 const createTicket = tool(
   async ({ title, description, name, aadObjectId }) => {
+    if (!title) {
+      return "Please specify the type of issue: hardware, software, construction, or other.";
+    }
+    if (!name) {
+      return "Please provide your full name for the ticket.";
+    }
+    if (!description) {
+      return "Please provide a detailed description of the issue.";
+    }
+    if (!aadObjectId) {
+      return "Cannot create ticket: missing user ID (aadObjectId).";
+    }
+
     let payload = {
       description,
       name,
       aadObjectId,
       title,
     };
-    return await ticketModel.create(payload);
+    let ticket = await ticketModel.create(payload);
+    return `
+    Ticket created successfully!  
+    - Ticket ID: ${ticket?._id}  
+    - Type: ${ticket?.title}  
+    - Description: ${ticket?.description}  
+    - Date: ${moment(ticket?.createdAt).format("DD/MM/YYYY HH:mm A")}`;
   },
   {
     name: "create_ticket",
@@ -38,16 +57,32 @@ const createTicket = tool(
 
 const getTicketByUser = tool(
   async ({ aadObjectId }) => {
-    return await ticketModel
+    let tickets = await ticketModel
       .find({ aadObjectId })
       .sort({ status: -1, createdAt: 1 });
+
+    const formatted = tickets.map((ticket, index) => {
+      return `
+      **Ticket ${index + 1}**:\n
+        - ID: ${ticket._id}
+        - Type: ${ticket.title}
+        - Status: ${ticket.status}
+        - Description: ${ticket.description}
+        - Created by: ${ticket.name}
+        - Date: ${moment(ticket.createdAt).format("DD/MM/YYYY HH:mm A")}
+        `;
+    });
+
+    return formatted.join(`\n`);
   },
   {
     name: "get_open_ticket_by_user",
     description: `
           Use this tool only when the user wants to view their tickets.
       `,
-    schema: ticketSchema,
+    schema: z.object({
+      aadObjectId: z.string().describe("unique id that help to identify user"),
+    }),
   }
 );
 

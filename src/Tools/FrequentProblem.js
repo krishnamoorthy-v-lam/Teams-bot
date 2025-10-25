@@ -3,7 +3,7 @@ const { tool } = require("@langchain/core/tools");
 const { z } = require("zod");
 
 const ticketSchema = z.object({
-  input: z.string().min(1).describe("User question to search FAQs"),
+  message: z.string().min(1).describe("User question to search FAQs"),
 });
 
 let ragStore;
@@ -16,12 +16,12 @@ const getRagStore = async () => {
 };
 
 const FreqQues = tool(
-  async ({ input }) => {
+  async ({ message }) => {
     const store = await getRagStore();
-    console.log(input, "input");
+    console.log(message, "message");
     console.log("store: ", store);
-    const results = await store.similaritySearch(input, 5);
-    console.log(results, "-->", input);
+    const results = await store.similaritySearch(message, 5);
+    console.log(results, "-->", message);
     return results[0]?.metadata?.solution || "No solution found.";
   },
   {

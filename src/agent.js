@@ -10,6 +10,7 @@ const config = require("./config");
 const path = require("path");
 const dotenv = require("dotenv");
 const { FreqQues } = require("./Tools/FrequentProblem");
+const { detectIntent, inferTitle } = require("./utils/Intent");
 const { getGraphToken } = require("./utils/Token");
 const getUserEmail = require("./utils/UserInfo");
 
@@ -48,27 +49,75 @@ agentApp.onConversationUpdate("membersAdded", async (context) => {
   await context.sendActivity(`Hi there! I'm an agent to chat with you.`);
 });
 
+const toolRouter = {
+  queryFAQ: FreqQues,
+  createTicket: createTicket,
+  getTickets: getTicketByUser,
+};
+
 agentApp.onActivity(ActivityTypes.Message, async (context) => {
   try {
-    const result = await agent.invoke({
-      messages: [
-        {
-          role: "user",
-          content: `
-            aadObjectId: ${context.activity.from?.aadObjectId}
-            userName: ${context.activity.from?.name},
-            message: ${context.activity.text}
-          `,
-        },
-      ],
-    });
+    const userMessage = context.activity.text;
 
-    const aiResponse =
-      result?.messages?.[result.messages.length - 1]?.content ||
-      "Sorry, I didn’t understand that.";
+    let intent = await detectIntent(userMessage);
+    const selectedTool = toolRouter[intent];
+    console.log("intent: ", intent);
 
-    console.log("Agent:", aiResponse);
-    await context.sendActivity(aiResponse);
+    if (!selectedTool) {
+      return await context.sendActivity(
+        "Sorry, I cannot handle this request yet."
+      );
+    }
+
+    if (intent === "queryFAQ") {
+      result = await selectedTool.invoke({ message: userMessage });
+      if (!result || result === "No solution found.") {
+        return await context.sendActivity(
+          "No FAQ solution found. Do you want to create a ticket?"
+        );
+      }
+      return await context.sendActivity(result);
+    }
+
+    if (intent === "createTicket") {
+ 
+      const title = await inferTitle.invoke({ description: userMessage });
+      console.log({title: title})
+      result = await selectedTool.invoke({
+        title,
+        name: context.activity.from?.name,
+        aadObjectId: context.activity.from?.aadObjectId,
+        description: userMessage,
+      });
+      return await context.sendActivity(`${result}`);
+    }
+
+    if (intent === "getTickets") {
+      result = await selectedTool.invoke({
+        aadObjectId: context.activity.from?.aadObjectId,
+      });
+      return await context.sendActivity(result);
+    }
+
+    // const result = await agent.invoke({
+    // messages: [
+    //   {
+    //     role: "user",
+    //     content: `
+    //       aadObjectId: ${context.activity.from?.aadObjectId}
+    //       userName: ${context.activity.from?.name},
+    //       message: ${context.activity.text}
+    //     `,
+    //   },
+    // ],
+    // });
+
+    // const aiResponse =
+    //   result?.messages?.[result.messages.length - 1]?.content ||
+    //   "Sorry, I didn’t understand that.";
+
+    // console.log("Agent:", aiResponse);
+    // await context.sendActivity(aiResponse);
   } catch (error) {
     console.error("Error:", error);
     await context.sendActivity(
