@@ -1,0 +1,91 @@
+[
+  {
+    "problem": "How to reset my password?",
+    "solution": "Go to settings > account > reset password."
+  },
+  {
+    "problem": "App crashes on startup",
+    "solution": "Update to the latest version. If issue persists, reinstall the app."
+  },
+
+  {
+    "problem": "Phone battery drains quickly",
+    "solution": "Reduce screen brightness, close unused apps, and disable background apps."
+  },
+  {
+    "problem": "Phone overheats",
+    "solution": "Avoid using heavy apps for long periods, remove phone case while charging, and keep phone out of direct sunlight."
+  },
+  {
+    "problem": "App keeps crashing",
+    "solution": "Update the app, clear app cache, or reinstall the app."
+  },
+  {
+    "problem": "Phone is slow or lagging",
+    "solution": "Restart your phone, clear cache, uninstall unused apps, and update your OS."
+  },
+  {
+    "problem": "Cannot connect to Wi-Fi",
+    "solution": "Restart your router and phone, forget and reconnect to the network, or reset network settings."
+  },
+  {
+    "problem": "Mobile data not working",
+    "solution": "Check APN settings, toggle airplane mode, and restart your phone."
+  },
+  {
+    "problem": "Bluetooth not pairing",
+    "solution": "Restart both devices, ensure Bluetooth is on, and remove old pairings."
+  },
+  {
+    "problem": "Screen is unresponsive",
+    "solution": "Restart your phone and remove screen protector if affecting touch sensitivity."
+  },
+  {
+    "problem": "Cannot receive SMS",
+    "solution": "Check signal strength, restart your phone, or reset network settings."
+  },
+  {
+    "problem": "Camera not working",
+    "solution": "Clear camera app cache, restart your phone, or update the app/OS."
+  },
+  {
+    "problem": "Phone not charging",
+    "solution": "Check charging cable and port, try a different charger, or clean charging port."
+  },
+  {
+    "problem": "Phone randomly restarts",
+    "solution": "Update OS, uninstall problematic apps, and check battery health."
+  },
+  {
+    "problem": "Cannot make calls",
+    "solution": "Check network signal, restart phone, and ensure no call restrictions are active."
+  },
+  {
+    "problem": "Phone storage full",
+    "solution": "Delete unnecessary files, clear cache, and use cloud storage."
+  },
+  {
+    "problem": "Phone not recognizing SIM card",
+    "solution": "Restart phone, remove and reinsert SIM, or try another SIM slot."
+  },
+  {
+    "problem": "Notifications not appearing",
+    "solution": "Check app notification settings and ensure battery optimization is not blocking them."
+  },
+  {
+    "problem": "Mobile hotspot not working",
+    "solution": "Restart your phone and devices, check data plan, and reset network settings."
+  },
+  {
+    "problem": "Phone speaker not working",
+    "solution": "Check volume, clean speaker grills, and test with headphones."
+  },
+  {
+    "problem": "Phone microphone not working",
+    "solution": "Remove case/dirt blocking microphone, restart phone, and test with different apps."
+  },
+  {
+    "problem": "App notifications delayed",
+    "solution": "Disable battery optimization for the app, ensure background data is on, and restart phone."
+  }
+]
