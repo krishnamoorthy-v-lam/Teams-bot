@@ -17,7 +17,8 @@ const getUserEmail = require("./utils/UserInfo");
 dotenv.config({
   path: path.resolve(__dirname, ".env.playground.user"),
 });
-
+console.log("testing by krish")
+console.dir({config},{depth: null})
 const client = new ChatOpenAI({
   apiKey: config.openAIKey,
   model: config.openAIModelName || "gpt-4o-mini",
